@@ -1,0 +1,31 @@
+flowchart TD
+    A([เริ่มต้น]) --> B[เปิดหน้า Login]
+    B --> C[กรอก/เลือก username]
+    C --> D{Mock API ตรวจสอบผู้ใช้}
+    D -->|ไม่พบผู้ใช้| E[แสดงข้อผิดพลาด]
+    E --> B
+    D -->|พบผู้ใช้| F[บันทึก user และ token ใน Auth Context]
+    F --> G{role คืออะไร}
+    G -->|admin| H[ไปหน้า /admin]
+    G -->|employee| I[ไปหน้า /employee]
+    H --> J{เข้า URL /employee หรือไม่}
+    I --> K{เข้า URL /admin หรือไม่}
+    J -->|ใช่| L[แจ้งไม่มีสิทธิ์และ redirect ไป /admin]
+    J -->|ไม่ใช่| M[ใช้งานหน้า Admin]
+    K -->|ใช่| N[แจ้งไม่มีสิทธิ์และ redirect ไป /employee]
+    K -->|ไม่ใช่| O[ใช้งานหน้า Employee]
+    M --> P{ทำรายการ Task}
+    O --> Q{เปลี่ยนสถานะ Task}
+    Q --> R{เป็น Task ของตนเองและสถานะ To Do หรือไม่}
+    R -->|ไม่ใช่| S[ปฏิเสธการเปลี่ยนสถานะ]
+    R -->|ใช่| T[เปลี่ยน To Do เป็น Done]
+    P --> U[สร้าง Task และมอบหมายผู้รับผิดชอบ]
+    U --> M
+    T --> O
+    S --> O
+    L --> M
+    N --> O
+    M --> V[กด Logout]
+    O --> V
+    V --> W[ล้าง user/token]
+    W --> B
